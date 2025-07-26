@@ -18,6 +18,7 @@ import sys
 from contextlib import contextmanager
 import tempfile
 import wave
+import configparser
 
 # Suppress progress bars and verbose output
 os.environ['WHISPER_SUPPRESS_PROGRESS'] = '1'
@@ -37,6 +38,20 @@ import warnings
 
 # Suppress pyannote warnings
 warnings.filterwarnings("ignore", category=UserWarning)
+
+
+def load_config():
+    """Load configuration from private config file."""
+    config = configparser.ConfigParser()
+    config_path = os.path.join(os.path.dirname(__file__), 'config_private.ini')
+    
+    if os.path.exists(config_path):
+        config.read(config_path)
+        return config
+    else:
+        print("⚠️  config_private.ini not found!")
+        print("   Copy config_private.ini.template to config_private.ini and add your HF token")
+        return None
 
 
 @contextmanager
@@ -132,10 +147,33 @@ class EnhancedAudioTranscriber:
         """Initialize the speaker diarization pipeline."""
         try:
             print("Loading speaker diarization model...")
+            
+            # Load configuration
+            config = load_config()
+            if not config:
+                self.enable_diarization = False
+                return
+            
+            # Get token and model name from config
+            try:
+                hf_token = config.get('huggingface', 'token')
+                model_name = config.get('pyannote', 'model_name', fallback='pyannote/speaker-diarization-3.1')
+                
+                if hf_token == 'YOUR_HF_TOKEN_HERE':
+                    print("⚠️  Please set your Hugging Face token in config_private.ini")
+                    self.enable_diarization = False
+                    return
+                    
+            except (configparser.NoSectionError, configparser.NoOptionError) as e:
+                print(f"⚠️  Config error: {e}")
+                print("   Please check your config_private.ini file")
+                self.enable_diarization = False
+                return
+            
             # Use the pre-trained diarization pipeline
             self.diarization_pipeline = Pipeline.from_pretrained(
-                "pyannote/speaker-diarization-3.1",
-                use_auth_token=None  # You may need a HuggingFace token for some models
+                model_name,
+                use_auth_token=hf_token
             )
             
             if self.device == "cuda":
@@ -143,7 +181,16 @@ class EnhancedAudioTranscriber:
             
             print("✅ Diarization model loaded successfully!")
         except Exception as e:
-            print(f"⚠️  Could not load diarization model: {e}")
+            print(f"⚠️  Could not load advanced diarization model: {e}")
+            if "gated" in str(e).lower() or "auth" in str(e).lower() or "token" in str(e).lower():
+                print("🔐 This model requires Hugging Face authentication:")
+                print("   1. Visit https://hf.co/pyannote/speaker-diarization-3.1")
+                print("   2. Accept the user conditions")
+                print("   3. Create a token at https://hf.co/settings/tokens")
+                print("   4. Add your token to config_private.ini")
+                print("")
+                print("💡 RECOMMENDATION: Use simple diarization instead (option 6)")
+                print("   It works without authentication and is faster!")
             print("   Continuing without speaker diarization...")
             self.enable_diarization = False
     

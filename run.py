@@ -27,8 +27,8 @@ def main():
     print("2. Test BlackHole system audio capture")
     print("3. Test GPU performance and model speed")
     print("4. Start transcription with BlackHole 2ch (default)")
-    print("5. Start transcription with speaker diarization (advanced)")
-    print("6. Start transcription with simple speaker diarization")
+    print("5. Start transcription with speaker diarization (advanced - experimental)")
+    print("6. Start transcription with simple speaker diarization (recommended)")
     print("7. Start transcription with custom settings")
     print("8. Exit")
     
@@ -57,7 +57,9 @@ def main():
         elif choice == "5":
             print("\nStarting transcription with speaker diarization (advanced)...")
             print("👥 Different speakers will be shown in different colors")
+            print("🔬 Uses pyannote.audio for advanced ML-based speaker identification")
             print("⚠️  Note: Advanced diarization may be slower than regular transcription")
+            print("⚠️  This feature requires more processing power and memory")
             print("Press Ctrl+C to stop transcription")
             subprocess.run([python_cmd, "audio_transcriber_diarization.py", "--model", "tiny", "--chunk-duration", "1.5"])
             

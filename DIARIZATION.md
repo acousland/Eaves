@@ -39,11 +39,18 @@ python audio_transcriber_simple_diarization.py --model tiny
 
 **Features:**
 - 🔬 Uses pyannote.audio for advanced speaker identification
-- ⚠️ Requires additional dependencies
+- ⚠️ Requires additional dependencies (pytorch-lightning, torch-audiomentations, etc.)
 - ⚠️ May be slower than simple diarization
 - ⚠️ Complex setup requirements
 
-**Status:** Currently has dependency installation issues with sentencepiece package.
+**Status:** Now working but requires Hugging Face authentication. If you get authentication errors, use simple diarization instead.
+
+**Authentication Setup (if you want to use advanced diarization):**
+1. Visit https://hf.co/pyannote/speaker-diarization-3.1
+2. Accept the user conditions  
+3. Create a token at https://hf.co/settings/tokens
+4. Copy `config_private.ini.template` to `config_private.ini`
+5. Replace `YOUR_HF_TOKEN_HERE` with your actual token
 
 ## Color Coding
 
@@ -94,7 +101,12 @@ Different speakers are displayed in different colors:
 
 ### Common Issues
 
-1. **All speakers show as Speaker 1**
+1. **Authentication errors with advanced diarization**
+   - The pyannote models are gated and require Hugging Face authentication
+   - **Solution**: Use simple diarization (option 6) - no authentication required
+   - **Alternative**: Set up HF authentication as described above
+
+2. **All speakers show as Speaker 1**
    - Audio might be too similar between speakers
    - Try adjusting clustering parameters
    - Ensure speakers have distinct vocal characteristics

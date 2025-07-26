@@ -48,6 +48,12 @@ Eaves is a Python application that captures audio from BlackHole (or any audio d
    pip install -r requirements.txt
    ```
 
+4. **Setup authentication for advanced diarization** (optional):
+   ```bash
+   cp config_private.ini.template config_private.ini
+   # Edit config_private.ini and add your Hugging Face token
+   ```
+
 ## Usage
 
 ### **Quick Start with Shell Script** (Recommended)

@@ -1,0 +1,12 @@
+# Private Configuration Template
+# Copy this file to config_private.ini and fill in your tokens
+
+[huggingface]
+# Your Hugging Face token for accessing gated models
+# Get yours at: https://hf.co/settings/tokens
+# Visit https://hf.co/pyannote/speaker-diarization-3.1 to accept user conditions
+token = YOUR_HF_TOKEN_HERE
+
+[pyannote]
+# Pyannote model settings
+model_name = pyannote/speaker-diarization-3.1

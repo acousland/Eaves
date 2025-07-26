@@ -101,8 +101,10 @@ install_project() {
     echo ""
     print_color $CYAN "Next steps:"
     echo "1. Configure BlackHole for system audio (see README.md)"
-    echo "2. Run: ./run.sh test"
-    echo "3. Run: ./run.sh start"
+    echo "2. For advanced diarization: cp config_private.ini.template config_private.ini"
+    echo "3. Add your Hugging Face token to config_private.ini (optional)"
+    echo "4. Run: ./run.sh test"
+    echo "5. Run: ./run.sh start"
 }
 
 # Function to run the interactive menu
